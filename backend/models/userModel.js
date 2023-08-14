@@ -1,8 +1,13 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt-nodejs";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
     {
+        name: {
+            type: String,
+            required: [true, "Name is required"],
+        },
+
         email: {
             type: String,
             unique: true,
@@ -12,7 +17,25 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: [true, "Password is required"],
             minlength: 1,
-            maxLength: 20,
+        },
+
+        // create status active/blocked
+        status: {
+            type: String,
+            enum: ["active", "blocked"],
+            default: "active",
+        },
+
+        // create registration time
+        registrationTime: {
+            type: Date,
+            default: Date.now,
+        },
+
+        // create last login time
+        lastLoginTime: {
+            type: Date,
+            default: Date.now,
         },
     },
 
