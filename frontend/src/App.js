@@ -1,7 +1,14 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 
 const App = () => {
-    return <div className=" bg-red-500">App</div>;
+    return (
+        <div>
+            <div>
+                <Outlet />
+            </div>
+        </div>
+    );
 };
 
 export default App;
