@@ -1,8 +1,6 @@
 import dateFormat from "dateformat";
-import { useState, useEffect } from "react";
-import { LinkContainer } from "react-router-bootstrap";
+import { useState } from "react";
 import { Table } from "react-bootstrap";
-import { FaTrash, FaEdit } from "react-icons/fa";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import Button from "react-bootstrap/Button";
@@ -18,10 +16,6 @@ import {
 import { toast } from "react-toastify";
 
 const tableHeadings = [
-    // {
-    //     id: "1",
-    //     headingName: "#",
-    // },
     {
         id: "2",
         headingName: "id",

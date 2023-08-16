@@ -11,10 +11,11 @@ import {
 } from "react-router-dom";
 import store from "./store";
 import { Provider } from "react-redux";
-import HomePage from "./pages/HomePage";
-import RegisterPage from "./pages/RegisterPage";
-import LoginPage from "./pages/LoginPage";
-import AdminPage from "./pages/admin/AdminPage";
+
+import AdminPage from "./modules/admin/AdminPage";
+import HomePage from "./modules/home/HomePage";
+import LoginPage from "./modules/auth/LoginPage";
+import RegisterPage from "./modules/auth/RegisterPage";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
