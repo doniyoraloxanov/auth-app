@@ -5,6 +5,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../../slices/usersApiSlice";
 import { logout } from "../../slices/authSlice";
+import { memo } from "react";
 
 const Header = () => {
     const { userInfo } = useSelector((state) => state.auth);
@@ -67,4 +68,4 @@ const Header = () => {
     );
 };
 
-export default Header;
+export default memo(Header);

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
 const FormContainer = ({ children }) => {
@@ -12,4 +13,4 @@ const FormContainer = ({ children }) => {
     );
 };
 
-export default FormContainer;
+export default memo(FormContainer);
