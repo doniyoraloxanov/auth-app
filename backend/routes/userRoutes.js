@@ -7,20 +7,21 @@ import {
     logoutUser,
     getUsers,
     deleteUser,
-    updateUserStatus,
+    blockUser,
+    unblockUser,
     getUserById,
 } from "../controllers/userController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
-router.route("/").get(protect, getUsers);
-router.route("/register").post(registerUser);
+router.route("/").get(protect, getUsers).post(registerUser);
 router.post("/logout", logoutUser);
-router.post("/login", authUser);
+router.post("/auth", authUser);
 
 router
     .route("/:id")
     .get(protect, getUserById)
     .delete(protect, deleteUser)
-    .put(protect, updateUserStatus);
+    .put(protect, blockUser)
+    .patch(protect, unblockUser);
 
 export default router;

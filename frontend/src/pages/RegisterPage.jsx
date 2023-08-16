@@ -24,7 +24,7 @@ const RegisterPage = () => {
 
     const { search } = useLocation();
     const sp = new URLSearchParams(search);
-    const redirect = sp.get("redirect") || "/";
+    const redirect = sp.get("redirect") || "/dashboard";
 
     useEffect(() => {
         if (userInfo) {
@@ -41,7 +41,6 @@ const RegisterPage = () => {
         } else {
             try {
                 const res = await register({ name, email, password }).unwrap();
-                console.log(res);
                 dispatch(setCredentials({ ...res }));
                 navigate(redirect);
             } catch (err) {

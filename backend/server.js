@@ -17,10 +17,6 @@ app.use(cookieParser());
 
 //******************* ROUTES ***********************/
 
-app.use("/", (req, res) => {
-    res.send("Hello World Lola");
-});
-
 app.use("/api/users", userRoutes);
 
 //******************* SERVER ***********************/

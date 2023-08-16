@@ -3,9 +3,6 @@ import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
 
 //****************************************************/
-// @desc    Auth user & get token
-// @route   POST /api/users/login
-// @access  Public
 const authUser = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -25,10 +22,6 @@ const authUser = asyncHandler(async (req, res) => {
 });
 
 //****************************************************/
-// @desc    Register a new user
-// @route   POST /api/users
-// @access  Public
-
 const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -61,10 +54,6 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 //****************************************************/
-// @desc logout user and clear cookie
-// @route   GET /api/users/logout
-// @access  Private
-
 const logoutUser = async (req, res) => {
     res.cookie("jwt", "", {
         httpOnly: true,
@@ -77,18 +66,14 @@ const logoutUser = async (req, res) => {
 };
 
 //****************************************************/
-// @desc  Get all users
-// @route GET /api/users
-// @access Private/Admin
+
 const getUsers = async (req, res) => {
     const users = await User.find({});
     res.json(users);
 };
 
 //****************************************************/
-// @desc  Get user by ID
-// @route GET /api/users/:id
-// @access Private/Admin
+
 const getUserById = async (req, res) => {
     const user = await User.findById(req.params.id).select("-password");
 
@@ -101,43 +86,32 @@ const getUserById = async (req, res) => {
 };
 
 //****************************************************/
-// @desc  Delete user
-// @route DELETE /api/users/:id
-// @access Private/Admin
-const deleteUser = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id);
 
-    if (user) {
-        await User.deleteOne({ _id: user._id });
-        res.json({ message: "User removed" });
-    } else {
-        res.status(404);
-        throw new Error("User not found");
+const deleteUser = async (req, res) => {
+    try {
+        const ids = req.body;
+
+        await User.deleteMany({ _id: { $in: ids } });
+
+        res.json({ message: "Users removed" });
+    } catch (error) {
+        throw new Error(`${error}`);
     }
+};
+//****************************************************/
+const blockUser = asyncHandler(async (req, res) => {
+    const ids = req.body;
+
+    await User.updateMany({ _id: { $in: ids } }, { status: "blocked" });
+
+    res.json({ message: "Users blocked" });
 });
 
-//****************************************************/
+const unblockUser = asyncHandler(async (req, res) => {
+    const ids = req.body;
 
-// @desc    Update user
-// @route   PUT /api/users/:id
-// @access  Private/Admin
-
-const updateUserStatus = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id);
-
-    if (user) {
-        user.status = req.body.status || user.status;
-
-        const updatedUser = await user.save();
-
-        res.json({
-            _id: updatedUser._id,
-            status: updatedUser.status,
-        });
-    } else {
-        res.status(404);
-        throw new Error("User not found");
-    }
+    await User.updateMany({ _id: { $in: ids } }, { status: "active" });
+    res.json({ message: "Users unblocked" });
 });
 
 export {
@@ -146,6 +120,7 @@ export {
     logoutUser,
     getUsers,
     deleteUser,
-    updateUserStatus,
+    blockUser,
+    unblockUser,
     getUserById,
 };

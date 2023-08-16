@@ -35,25 +35,55 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             query: () => ({
                 url: `${USERS_URL}`,
             }),
-            providesTags: ["Users"],
+            providesTags: ["User"],
             keepUnusedDataFor: 5,
+        }),
+
+        // //**********  GET USER BY ID   ***********/
+        getUserById: builder.query({
+            query: (userId) => ({
+                url: `${USERS_URL}/${userId}`,
+            }),
+            providesTags: ["User"],
         }),
 
         //**********  DELETE USER   ***********/
         deleteUser: builder.mutation({
-            query: (userId) => ({
-                url: `${USERS_URL}/${userId}`,
-                method: "DELETE",
-            }),
+            query: (userIds) => {
+                console.log("userIds", userIds);
+                return {
+                    url: `${USERS_URL}/${userIds}}`,
+                    method: "DELETE",
+                    body: userIds,
+                };
+            },
+
+            providesTags: ["User"],
         }),
 
-        //**********  UPDATE USER   ***********/
-        updateUser: builder.mutation({
-            query: (data) => ({
-                url: `${USERS_URL}/${data.id}`,
-                method: "PUT",
-                body: data,
-            }),
+        //**********  BLOCK USER   ***********/
+        blockUser: builder.mutation({
+            query: (userIds) => {
+                console.log("Block", userIds);
+                return {
+                    url: `${USERS_URL}/${userIds}`,
+                    method: "PUT",
+                    body: userIds,
+                };
+            },
+            invalidatesTags: ["User"],
+        }),
+
+        //**********  UNBLOCK USER   ***********/
+        unblockUser: builder.mutation({
+            query: (userIds) => {
+                console.log("Unblock", userIds);
+                return {
+                    url: `${USERS_URL}/${userIds}`,
+                    method: "PATCH",
+                    body: userIds,
+                };
+            },
             invalidatesTags: ["User"],
         }),
     }),
@@ -64,6 +94,8 @@ export const {
     useLogoutMutation,
     useRegisterMutation,
     useGetUsersQuery,
+    useGetUserByIdQuery,
     useDeleteUserMutation,
-    useUpdateUserMutation,
+    useBlockUserMutation,
+    useUnblockUserMutation,
 } = usersApiSlice;

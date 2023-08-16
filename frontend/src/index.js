@@ -14,7 +14,7 @@ import { Provider } from "react-redux";
 import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
-import AdminPage from "./pages/AdminPage";
+import AdminPage from "./pages/admin/AdminPage";
 
 const router = createBrowserRouter(
     createRoutesFromElements(

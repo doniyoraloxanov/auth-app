@@ -9,7 +9,7 @@ import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { toast } from "react-toastify";
 
-const LoginScreen = () => {
+const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -22,7 +22,7 @@ const LoginScreen = () => {
 
     const { search } = useLocation();
     const sp = new URLSearchParams(search);
-    const redirect = sp.get("redirect") || "/";
+    const redirect = sp.get("redirect") || "/dashboard";
 
     useEffect(() => {
         if (userInfo) {
@@ -43,7 +43,7 @@ const LoginScreen = () => {
 
     return (
         <FormContainer>
-            <h1>Sign In</h1>
+            <h1 className="bg-red-500">Sign In</h1>
 
             <Form onSubmit={submitHandler}>
                 <Form.Group className="my-2" controlId="email">
@@ -91,4 +91,4 @@ const LoginScreen = () => {
     );
 };
 
-export default LoginScreen;
+export default LoginPage;
