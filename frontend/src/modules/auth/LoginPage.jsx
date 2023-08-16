@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../components/Loader";
 import FormContainer from "../../components/FormContainer";
+import { useForm } from "react-hook-form";
 
 import { useLoginMutation } from "../../slices/usersApiSlice";
 import { setCredentials } from "../../slices/authSlice";
 import { toast } from "react-toastify";
 
 const LoginPage = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const { register, handleSubmit } = useForm();
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -30,11 +30,11 @@ const LoginPage = () => {
         }
     }, [navigate, redirect, userInfo]);
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
+    const onSubmit = async (e) => {
+        const { email, password } = e;
         try {
             const res = await login({ email, password }).unwrap();
-            dispatch(setCredentials({ ...res }));
+            dispatch(setCredentials(res));
             navigate(redirect);
         } catch (err) {
             toast.error(err?.data?.message || err.error);
@@ -45,14 +45,15 @@ const LoginPage = () => {
         <FormContainer>
             <h1 className="bg-red-500">Sign In</h1>
 
-            <Form onSubmit={submitHandler}>
+            <Form onSubmit={handleSubmit(onSubmit)}>
                 <Form.Group className="my-2" controlId="email">
                     <Form.Label>Email Address</Form.Label>
                     <Form.Control
                         type="email"
                         placeholder="Enter email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        {...register("email", {
+                            required: true,
+                        })}
                     ></Form.Control>
                 </Form.Group>
 
@@ -61,8 +62,9 @@ const LoginPage = () => {
                     <Form.Control
                         type="password"
                         placeholder="Enter password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        {...register("password", {
+                            required: true,
+                        })}
                     ></Form.Control>
                 </Form.Group>
 
@@ -75,7 +77,7 @@ const LoginPage = () => {
 
             <Row className="py-3">
                 <Col>
-                    New Customer?
+                    New User?
                     <Link
                         to={
                             redirect

@@ -2,13 +2,12 @@ import { memo } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
 const Footer = () => {
-    const currentYear = new Date().getFullYear();
     return (
         <footer>
             <Container>
                 <Row>
                     <Col className="text-center py-3">
-                        <p>Made by Doniyor &copy; {currentYear}</p>
+                        <p>Made by Doniyor &copy; 2023</p>
                     </Col>
                 </Row>
             </Container>

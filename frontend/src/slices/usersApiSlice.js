@@ -4,7 +4,6 @@ import { apiSlice } from "./apiSlice";
 
 export const usersApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        //**********  LOGIN   ***********/
         login: builder.mutation({
             query: (data) => ({
                 url: `${USERS_URL}/auth`,
@@ -13,16 +12,17 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             }),
         }),
 
-        //**********  REGISTER   ***********/
         register: builder.mutation({
-            query: (data) => ({
-                url: `${USERS_URL}`,
-                method: "POST",
-                body: data,
-            }),
+            query: (data) => {
+                console.log("register slice", data);
+                return {
+                    url: `${USERS_URL}`,
+                    method: "POST",
+                    body: data,
+                };
+            },
         }),
 
-        //**********  LOGOUT   ***********/
         logout: builder.mutation({
             query: () => ({
                 url: `${USERS_URL}/logout`,
@@ -30,7 +30,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             }),
         }),
 
-        //**********  GET ALL USERS   ***********/
         getUsers: builder.query({
             query: () => ({
                 url: `${USERS_URL}`,
@@ -39,7 +38,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             keepUnusedDataFor: 5,
         }),
 
-        // //**********  GET USER BY ID   ***********/
         getUserById: builder.query({
             query: (userId) => ({
                 url: `${USERS_URL}/${userId}`,
@@ -47,7 +45,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             providesTags: ["User"],
         }),
 
-        //**********  DELETE USER   ***********/
         deleteUser: builder.mutation({
             query: (userIds) => {
                 console.log("userIds", userIds);
@@ -61,7 +58,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             providesTags: ["User"],
         }),
 
-        //**********  BLOCK USER   ***********/
         blockUser: builder.mutation({
             query: (userIds) => {
                 console.log("Block", userIds);
@@ -74,7 +70,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ["User"],
         }),
 
-        //**********  UNBLOCK USER   ***********/
         unblockUser: builder.mutation({
             query: (userIds) => {
                 console.log("Unblock", userIds);

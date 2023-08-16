@@ -30,7 +30,7 @@ const Header = () => {
                 <Container>
                     <LinkContainer to="/">
                         <Navbar.Brand className="navbar-brand">
-                            Task4
+                            Welcome! {userInfo?.name}
                         </Navbar.Brand>
                     </LinkContainer>
                     <Navbar.Toggle id="basic-navbar-nav" />
@@ -42,11 +42,11 @@ const Header = () => {
                                     id="username"
                                     className="navbar-brand"
                                 >
-                                    <LinkContainer to="/profile">
+                                    {/* <LinkContainer to="/profile">
                                         <NavDropdown.Item>
                                             Profile
                                         </NavDropdown.Item>
-                                    </LinkContainer>
+                                    </LinkContainer> */}
 
                                     <NavDropdown.Item onClick={logoutHandler}>
                                         Logout
