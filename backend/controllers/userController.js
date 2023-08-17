@@ -7,7 +7,11 @@ const authUser = catchAsync(async (req, res) => {
 
   const user = await User.findOne({ email });
 
-  if (user && (await user.matchPassword(password))) {
+  if (
+    user &&
+    (await user.matchPassword(password)) &&
+    !user.status === "blocked"
+  ) {
     generateToken(res, user._id);
 
     res.json({
@@ -56,7 +60,7 @@ const logoutUser = catchAsync(async (req, res) => {
     expires: new Date(0),
   });
 
-  res.status(401).json({ message: "Invalid email or password" });
+  res.status(401).json({ message: "Logged out successfully" });
 });
 
 const getUsers = catchAsync(async (req, res) => {
@@ -67,9 +71,9 @@ const getUsers = catchAsync(async (req, res) => {
 const getUserById = catchAsync(async (req, res) => {
   const user = await User.findById(req.params.id).select("-password");
   if (user) {
-    return res.json(user);
+    return res.status(200).json(user);
   } else {
-    res.status(401).json({ message: "Invalid email or password" });
+    res.status(401).json({ message: "User not found" });
   }
 });
 
@@ -78,9 +82,9 @@ const deleteUser = catchAsync(async (req, res) => {
   if (ids) {
     await User.deleteMany({ _id: { $in: ids } });
 
-    res.json({ message: "Users removed" });
+    res.json({ message: "User deleted" });
   } else {
-    res.status(401).json({ message: "User is removed" });
+    res.status(401).json({ message: "User not found" });
   }
 });
 const blockUser = catchAsync(async (req, res) => {
@@ -91,7 +95,7 @@ const blockUser = catchAsync(async (req, res) => {
 
     res.json({ message: "Users blocked" });
   } else {
-    res.status(401).json({ message: "User is blocked" });
+    res.status(401).json({ message: "User not found" });
   }
 });
 
@@ -101,7 +105,7 @@ const unblockUser = catchAsync(async (req, res) => {
     await User.updateMany({ _id: { $in: ids } }, { status: "active" });
     res.json({ message: "Users unblocked" });
   } else {
-    res.status(401).json({ message: "User is unblocked" });
+    res.status(401).json({ message: "User not found" });
   }
 });
 
