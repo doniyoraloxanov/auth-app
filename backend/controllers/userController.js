@@ -64,18 +64,14 @@ const getUsers = catchAsync(async (req, res) => {
   res.json(users);
 });
 
-const getUserById = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id).select("-password");
-    if (user) {
-      return res.json(user);
-    } else {
-      res.status(401).json({ message: "Invalid email or password" });
-    }
-  } catch (error) {
+const getUserById = catchAsync(async (req, res) => {
+  const user = await User.findById(req.params.id).select("-password");
+  if (user) {
+    return res.json(user);
+  } else {
     res.status(401).json({ message: "Invalid email or password" });
   }
-};
+});
 
 const deleteUser = catchAsync(async (req, res) => {
   const ids = req.body;

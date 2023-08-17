@@ -8,64 +8,57 @@ import { logout } from "../../slices/authSlice";
 import { memo } from "react";
 
 const Header = () => {
-    const { userInfo } = useSelector((state) => state.auth);
+  const { userInfo } = useSelector((state) => state.auth);
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [logoutMutation] = useLogoutMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [logoutMutation] = useLogoutMutation();
 
-    const logoutHandler = async () => {
-        try {
-            await logoutMutation();
-            dispatch(logout());
-            navigate("/login");
-        } catch (err) {
-            console.log(err.message);
-        }
-    };
+  const logoutHandler = async () => {
+    try {
+      await logoutMutation();
+      dispatch(logout());
+      navigate("/login");
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
 
-    return (
-        <header>
-            <Navbar bg="success" variant="dark" expand="md" collapseOnSelect>
-                <Container>
-                    <LinkContainer to="/">
-                        <Navbar.Brand className="navbar-brand">
-                            Welcome! {userInfo?.name}
-                        </Navbar.Brand>
-                    </LinkContainer>
-                    <Navbar.Toggle id="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="ms-auto">
-                            {userInfo ? (
-                                <NavDropdown
-                                    title={userInfo.name}
-                                    id="username"
-                                    className="navbar-brand"
-                                >
-                                    {/* <LinkContainer to="/profile">
-                                        <NavDropdown.Item>
-                                            Profile
-                                        </NavDropdown.Item>
-                                    </LinkContainer> */}
-
-                                    <NavDropdown.Item onClick={logoutHandler}>
-                                        Logout
-                                    </NavDropdown.Item>
-                                </NavDropdown>
-                            ) : (
-                                <LinkContainer to="/login">
-                                    <Nav.Link href="/login">
-                                        <FaUser className="navbar-brand" /> Sign
-                                        in
-                                    </Nav.Link>
-                                </LinkContainer>
-                            )}
-                        </Nav>
-                    </Navbar.Collapse>
-                </Container>
-            </Navbar>
-        </header>
-    );
+  return (
+    <header>
+      <Navbar bg="success" variant="dark" expand="md" collapseOnSelect>
+        <Container>
+          <LinkContainer to="/">
+            <Navbar.Brand className="navbar-brand">
+              Welcome! {userInfo?.name && userInfo.name}
+            </Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle id="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ms-auto">
+              {userInfo ? (
+                <NavDropdown
+                  title={userInfo.name}
+                  id="username"
+                  className="navbar-brand"
+                >
+                  <NavDropdown.Item onClick={logoutHandler}>
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
+              ) : (
+                <LinkContainer to="/login">
+                  <Nav.Link href="/login">
+                    <FaUser className="navbar-brand" /> Sign in
+                  </Nav.Link>
+                </LinkContainer>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </header>
+  );
 };
 
 export default memo(Header);
