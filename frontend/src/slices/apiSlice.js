@@ -4,7 +4,9 @@ import { BASE_URL } from "../constants";
 const baseQuery = fetchBaseQuery({ baseUrl: BASE_URL });
 
 export const apiSlice = createApi({
-    baseQuery,
-    tagTypes: ["User"],
-    endpoints: (builder) => ({}),
+  baseQuery,
+  tagTypes: ["User"],
+  endpoints: (builder) => {
+    return {};
+  },
 });

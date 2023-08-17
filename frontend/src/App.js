@@ -6,20 +6,20 @@ import { Outlet } from "react-router-dom";
 import { Container } from "react-bootstrap";
 
 const App = () => {
-    return (
-        <>
-            <Header />
+  return (
+    <>
+      <Header />
 
-            <main className="py-3 ">
-                <Container>
-                    <Outlet />
-                </Container>
-            </main>
-            <Footer />
+      <main className="py-3 ">
+        <Container>
+          <Outlet />
+        </Container>
+      </main>
+      <Footer />
 
-            <ToastContainer />
-        </>
-    );
+      <ToastContainer />
+    </>
+  );
 };
 
 export default App;

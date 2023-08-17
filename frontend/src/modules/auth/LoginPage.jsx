@@ -7,90 +7,91 @@ import FormContainer from "../../components/FormContainer";
 import { useForm } from "react-hook-form";
 
 import { useLoginMutation } from "../../slices/usersApiSlice";
-import { setCredentials, selectIsLogged } from "../../slices/authSlice";
+import { setCredentials } from "../../slices/authSlice";
+
 import { toast } from "react-toastify";
 
 const LoginPage = () => {
-    const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm();
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
 
-    const { isLogged } = useSelector(selectIsLogged);
+  const { userInfo } = useSelector((state) => state.auth);
 
-    const { search } = useLocation();
-    const sp = new URLSearchParams(search);
-    const redirect = sp.get("redirect") || "/";
+  const { search } = useLocation();
+  const sp = new URLSearchParams(search);
+  const redirect = sp.get("redirect") || "/";
 
-    useEffect(() => {
-        if (isLogged) {
-            navigate(redirect);
-        }
-    }, [navigate, redirect, isLogged]);
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [navigate, redirect, userInfo]);
 
-    const onSubmit = async (e) => {
-        const { email, password } = e;
-        try {
-            const res = await login({ email, password }).unwrap();
-            dispatch(setCredentials(res));
-            navigate(redirect);
-        } catch (err) {
-            toast.error(err?.data?.message || err.error);
-        }
-    };
+  const onSubmit = async (e) => {
+    const { email, password } = e;
+    try {
+      const res = await login({ email, password })
+        .unwrap()
+        .catch((err) => {
+          throw err;
+        });
+      dispatch(setCredentials(res));
+      navigate(redirect);
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
+  };
 
-    return (
-        <FormContainer>
-            <h1 className="bg-red-500">Sign In</h1>
+  return (
+    <FormContainer>
+      <h1 className="bg-red-500">Sign In</h1>
 
-            <Form onSubmit={handleSubmit(onSubmit)}>
-                <Form.Group className="my-2" controlId="email">
-                    <Form.Label>Email Address</Form.Label>
-                    <Form.Control
-                        type="email"
-                        placeholder="Enter email"
-                        {...register("email", {
-                            required: true,
-                        })}
-                    ></Form.Control>
-                </Form.Group>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form.Group className="my-2" controlId="email">
+          <Form.Label>Email Address</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Enter email"
+            {...register("email", {
+              required: true,
+            })}
+          ></Form.Control>
+        </Form.Group>
 
-                <Form.Group className="my-2" controlId="password">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        type="password"
-                        placeholder="Enter password"
-                        {...register("password", {
-                            required: true,
-                        })}
-                    ></Form.Control>
-                </Form.Group>
+        <Form.Group className="my-2" controlId="password">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Enter password"
+            {...register("password", {
+              required: true,
+            })}
+          ></Form.Control>
+        </Form.Group>
 
-                <Button disabled={isLoading} type="submit" variant="primary">
-                    Sign In
-                </Button>
+        <Button disabled={isLoading} type="submit" variant="primary">
+          Sign In
+        </Button>
 
-                {isLoading && <Loader />}
-            </Form>
+        {isLoading && <Loader />}
+      </Form>
 
-            <Row className="py-3">
-                <Col>
-                    New User?
-                    <Link
-                        to={
-                            redirect
-                                ? `/register?redirect=${redirect}`
-                                : "/register"
-                        }
-                    >
-                        Register
-                    </Link>
-                </Col>
-            </Row>
-        </FormContainer>
-    );
+      <Row className="py-3">
+        <Col>
+          New User?
+          <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
+            Register
+          </Link>
+        </Col>
+      </Row>
+    </FormContainer>
+  );
 };
 
 export default LoginPage;
+
+//
