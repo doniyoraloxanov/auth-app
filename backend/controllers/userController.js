@@ -1,6 +1,6 @@
-import catchAsync from "../middlewares/catchAsync.js";
 import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
+import catchAsync from "../middlewares/catchAsync.js";
 
 const authUser = catchAsync(async (req, res) => {
   const { email, password } = req.body;
@@ -9,13 +9,15 @@ const authUser = catchAsync(async (req, res) => {
 
   if (user && (await user.matchPassword(password))) {
     generateToken(res, user._id);
+
     res.json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      isAdmin: user.isAdmin,
     });
   } else {
-    res.status(401).json({ message: "User does exsist" });
+    res.status(401).json({ message: "Invalid email or password" });
   }
 });
 
@@ -25,8 +27,7 @@ const registerUser = catchAsync(async (req, res) => {
   const userExists = await User.findOne({ email });
 
   if (userExists) {
-    res.status(400);
-    throw new Error("User already exists");
+    res.status(400).json({ message: "User already exists" });
   }
 
   const user = await User.create({
@@ -55,9 +56,7 @@ const logoutUser = catchAsync(async (req, res) => {
     expires: new Date(0),
   });
 
-  res.status(200).json({
-    message: "User logged out",
-  });
+  res.status(401).json({ message: "Invalid email or password" });
 });
 
 const getUsers = catchAsync(async (req, res) => {
@@ -65,40 +64,49 @@ const getUsers = catchAsync(async (req, res) => {
   res.json(users);
 });
 
-const getUserById = catchAsync(async (req, res) => {
-  const user = await User.findById(req.params.id).select("-password");
-
-  if (user) {
-    return res.json(user);
-  } else {
+const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    if (user) {
+      return res.json(user);
+    } else {
+      res.status(401).json({ message: "Invalid email or password" });
+    }
+  } catch (error) {
     res.status(401).json({ message: "Invalid email or password" });
   }
-});
+};
 
-const deleteUser = async (req, res) => {
-  try {
-    const ids = req.body;
-
+const deleteUser = catchAsync(async (req, res) => {
+  const ids = req.body;
+  if (ids) {
     await User.deleteMany({ _id: { $in: ids } });
 
     res.json({ message: "Users removed" });
-  } catch (error) {
+  } else {
     res.status(401).json({ message: "User is removed" });
   }
-};
+});
 const blockUser = catchAsync(async (req, res) => {
   const ids = req.body;
 
-  await User.updateMany({ _id: { $in: ids } }, { status: "blocked" });
+  if (ids) {
+    await User.updateMany({ _id: { $in: ids } }, { status: "blocked" });
 
-  res.json({ message: "Users blocked" });
+    res.json({ message: "Users blocked" });
+  } else {
+    res.status(401).json({ message: "User is blocked" });
+  }
 });
 
 const unblockUser = catchAsync(async (req, res) => {
   const ids = req.body;
-
-  await User.updateMany({ _id: { $in: ids } }, { status: "active" });
-  res.json({ message: "Users unblocked" });
+  if (ids) {
+    await User.updateMany({ _id: { $in: ids } }, { status: "active" });
+    res.json({ message: "Users unblocked" });
+  } else {
+    res.status(401).json({ message: "User is unblocked" });
+  }
 });
 
 export {

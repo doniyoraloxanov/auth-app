@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
-import asyncHandler from "./catchAsync.js";
+import catchAsync from "./catchAsync.js";
 import User from "../models/userModel.js";
 
-const protect = asyncHandler(async (req, res, next) => {
+const protect = catchAsync(async (req, res, next) => {
   let token;
   token = req.cookies.jwt;
 
@@ -13,10 +13,11 @@ const protect = asyncHandler(async (req, res, next) => {
       req.user = await User.findById(decoded.userId).select("-password");
 
       if (!req.user || req.user.status === "blocked") {
-        res.status(401).json({ message: "User is blocked" });
+        res.status(401).json({ message: "User is deleted" });
       }
       next();
     } catch (error) {
+      console.log(error);
       console.error(error);
       res.status(401);
       throw new Error("Not authorized, token failed");

@@ -7,7 +7,6 @@ import {
   useBlockUserMutation,
   useUnblockUserMutation,
 } from "../../slices/usersApiSlice";
-import Loader from "../Loader";
 
 const ButtonToolbar = ({
   checkedUsers,
@@ -25,7 +24,6 @@ const ButtonToolbar = ({
       await blockUser(checkedUsers);
       setCheckedUsers([]);
       setSelectAll(false);
-      <Loader />;
       refetch();
     } catch (err) {
       toast.error(err?.data?.message || err.error);
@@ -48,7 +46,6 @@ const ButtonToolbar = ({
       await deleteUser(checkedUsers);
       setCheckedUsers([]);
       setSelectAll(false);
-      isLoading && <Loader />;
       refetch();
     } catch (err) {
       toast.error(err?.data?.message || err.error);

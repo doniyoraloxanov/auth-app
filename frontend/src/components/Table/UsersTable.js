@@ -38,7 +38,7 @@ const UsersTable = () => {
     setCheckedUsers(checked ? users.map((user) => user._id) : []);
   };
 
-  if (error && error?.originalStatus === 401) {
+  if (error && error?.status === 401) {
     dispatch(logout());
     return <Navigate to="/register" />;
   }

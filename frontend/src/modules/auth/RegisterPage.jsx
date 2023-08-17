@@ -86,10 +86,10 @@ const RegisterPage = () => {
       </Form>
 
       <Row className="py-3">
-        <Col>
-          Already have an account?
+        <Col className="pr-2">
+          Already have an account?{" "}
           <Link to={redirect ? `/login?redirect=${redirect}` : "/register"}>
-            Login
+            Sign in
           </Link>
         </Col>
       </Row>
