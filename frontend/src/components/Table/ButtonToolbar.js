@@ -8,7 +8,12 @@ import {
     useUnblockUserMutation,
 } from "../../slices/usersApiSlice";
 
-const ButtonToolbar = ({ checkedUsers, refetch }) => {
+const ButtonToolbar = ({
+    checkedUsers,
+    refetch,
+    setCheckedUsers,
+    setSelectAll,
+}) => {
     const [deleteUser] = useDeleteUserMutation();
     const [blockUser] = useBlockUserMutation();
     const [unblockUser] = useUnblockUserMutation();
@@ -16,6 +21,9 @@ const ButtonToolbar = ({ checkedUsers, refetch }) => {
     const blockHandler = async () => {
         try {
             await blockUser(checkedUsers);
+            setCheckedUsers([]);
+            setSelectAll(false);
+
             refetch();
         } catch (err) {
             toast.error(err?.data?.message || err.error);
@@ -25,6 +33,8 @@ const ButtonToolbar = ({ checkedUsers, refetch }) => {
     const unblockedHandler = async () => {
         try {
             await unblockUser(checkedUsers);
+            setCheckedUsers([]);
+            setSelectAll(false);
             refetch();
         } catch (err) {
             toast.error(err?.data?.message || err.error);
@@ -34,6 +44,9 @@ const ButtonToolbar = ({ checkedUsers, refetch }) => {
     const deleteHandler = async () => {
         try {
             await deleteUser(checkedUsers);
+            setCheckedUsers([]);
+            setSelectAll(false);
+
             refetch();
         } catch (err) {
             toast.error(err?.data?.message || err.error);

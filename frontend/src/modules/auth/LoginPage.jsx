@@ -7,7 +7,7 @@ import FormContainer from "../../components/FormContainer";
 import { useForm } from "react-hook-form";
 
 import { useLoginMutation } from "../../slices/usersApiSlice";
-import { setCredentials } from "../../slices/authSlice";
+import { setCredentials, selectIsLogged } from "../../slices/authSlice";
 import { toast } from "react-toastify";
 
 const LoginPage = () => {
@@ -18,17 +18,17 @@ const LoginPage = () => {
 
     const [login, { isLoading }] = useLoginMutation();
 
-    const { userInfo } = useSelector((state) => state.auth);
+    const { isLogged } = useSelector(selectIsLogged);
 
     const { search } = useLocation();
     const sp = new URLSearchParams(search);
-    const redirect = sp.get("redirect") || "/dashboard";
+    const redirect = sp.get("redirect") || "/";
 
     useEffect(() => {
-        if (userInfo) {
+        if (isLogged) {
             navigate(redirect);
         }
-    }, [navigate, redirect, userInfo]);
+    }, [navigate, redirect, isLogged]);
 
     const onSubmit = async (e) => {
         const { email, password } = e;

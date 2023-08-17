@@ -1,7 +1,12 @@
 import React from "react";
+import RegisterPage from "../auth/RegisterPage";
 
 const HomePage = () => {
-    return <div className="bg-red-500">HomePage</div>;
+    return (
+        <div>
+            <RegisterPage />
+        </div>
+    );
 };
 
 export default HomePage;

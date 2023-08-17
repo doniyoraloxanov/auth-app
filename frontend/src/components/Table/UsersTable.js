@@ -12,8 +12,8 @@ import ButtonToolbar from "./ButtonToolbar";
 
 const UsersTable = () => {
     const { data: users, refetch, isLoading, error } = useGetUsersQuery();
-
     const [checkedUsers, setCheckedUsers] = useState([]);
+    const [selectAll, setSelectAll] = useState(false);
 
     const handleCheck = (id) => {
         if (checkedUsers.includes(id)) {
@@ -21,12 +21,26 @@ const UsersTable = () => {
         } else {
             setCheckedUsers([...checkedUsers, id]);
         }
+
+        setSelectAll((prevSelectAll) =>
+            users.every((user) => checkedUsers.includes(user._id))
+        );
+    };
+
+    const handleSelectAll = (event) => {
+        const checked = event.target.checked;
+        setSelectAll(checked);
+        setCheckedUsers(checked ? users.map((user) => user._id) : []);
     };
 
     return (
         <>
-            <ButtonToolbar checkedUsers={checkedUsers} refetch={refetch} />
-
+            <ButtonToolbar
+                checkedUsers={checkedUsers}
+                setCheckedUsers={setCheckedUsers}
+                setSelectAll={setSelectAll}
+                refetch={refetch}
+            />
             {isLoading ? (
                 <Loader />
             ) : error ? (
@@ -38,7 +52,11 @@ const UsersTable = () => {
                     <thead>
                         <tr>
                             <th>
-                                <Form.Check aria-label="option 1" />
+                                <Form.Check
+                                    aria-label="select all"
+                                    checked={selectAll}
+                                    onChange={handleSelectAll}
+                                />
                             </th>
                             {tableHeadings.map((heading) => (
                                 <th key={heading.id}>{heading.headingName}</th>
@@ -55,12 +73,15 @@ const UsersTable = () => {
                                                 key={`default-${type}`}
                                                 className="mb-3"
                                             >
-                                                <Form.Check // prettier-ignore
+                                                <Form.Check
                                                     type="checkbox"
                                                     id="checkbox"
                                                     onChange={() =>
                                                         handleCheck(user._id)
                                                     }
+                                                    checked={checkedUsers.includes(
+                                                        user._id
+                                                    )}
                                                 />
                                             </div>
                                         ))}
